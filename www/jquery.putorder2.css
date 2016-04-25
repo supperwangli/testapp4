@@ -1,0 +1,26 @@
+
+.css_top0{position:absolute;top:0px;height:40px;line-height:40px;left:0px;width:40px;z-index:50;background:url(close.png);cursor:pointer;}
+.css_top1{position:absolute;top:0px;height:40px;line-height:40px;left:40px;right:0px;text-align:center;z-index:50;background:gray;}
+
+.css_po_l{position:absolute;top:40px;bottom:50px;left:0px;right:0px;z-index:50;background:white;padding:20px;padding:20px;}
+.css_orderline {height:30px;line-height:30px;border-width:0px 0px 1px 0px;border-style:solid;border-color:lightblue;}
+
+.css_po_b{position:absolute;bottom:0px;height:50px;line-height:50px;left:0px;right:0px;text-align:center;
+z-index:50;color:white;background:lightgray;}
+.css_po_b0{height:50px;line-height:50px;float:left;margin:0px 100px;color:black;}
+.css_po_b1{height:30px;line-height:30px;width:100px;float:right;margin:10px 10px;text-align:center;border-radius:7px;background:red;}
+
+.btn_po{
+  float:left;
+  background:#3399cc;
+  padding:10px 0px;
+  font-family:'Open Sans',sans-serif;
+  font-size:100%;
+  text-align:center;
+  color:#fff;
+  cursor:pointer;
+  height:100%;
+}
+.btn_po:hover{
+  background:#2288bb;
+}

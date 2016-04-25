@@ -1,0 +1,227 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>餐厅</title>
+
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8"/>
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="expires" content="0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+<script src="jquery.js"></script>
+<script src="jquery.qrcode.min.js"></script>
+<script src="login.js"></script>
+
+<link rel="stylesheet" type="text/css" media="screen" href="jquery.caidan.css" />
+<script src="jquery.caidan.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="jquery.putorder.css" />
+<script src="jquery.putorder.js"></script>
+
+<style type="text/css">
+body{}
+
+#top1{position:absolute;top:0px;height:40px;left:0px;width:40px;background:url(back.png);cursor:pointer;}
+#top2{position:absolute;top:0px;height:40px;line-height:40px;left:40px;right:40px;padding:0px 10px;background:gray;}
+#top3{position:absolute;top:0px;height:40px;right:0px;width:40px;background:url(option.png);cursor:pointer;}
+#id_popb{position:absolute;top:40px;height:90px;right:0px;width:100px;text-align:center;z-index:50;background:gray;display:none;}
+#bottombar{position:absolute;bottom:0px;height:50px;line-height:50px;left:0px;right:0px;padding:0px 10px;background:lightgray;}
+
+#id_showorder {position:absolute;top:0px;left:0px;bottom:0px;right:0px;z-index:99;display:none;background:white;}
+#css_showorder{position:absolute;top:0px;left:0px;bottom:50px;right:0px;z-index:99;display:none;background:white;}
+#css_closeorder{position:absolute;left:0px;right:0px;bottom:0px;height:50px;z-index:99;display:none;background:gray;}
+
+#ID_PAGE2 {position:absolute;top:40px;left:0px;bottom:50px;right:0px;z-index:4;display:none;background:white;}
+#ID_PAGE2 h2 {margin:5px 5px 0px 5px;padding:5px;background:lightblue;font-size:20px;text-align:left;}
+#ID_PAGE2 td {padding:5px 10px;}
+
+#css_login {position:absolute;top:0px;left:0px;bottom:0px;right:0px;z-index:99;display:none;background:white;}
+.btn{
+  float:left;
+  background:#3399cc;
+  padding:10px 0px;
+  font-family:'Open Sans',sans-serif;
+  font-size:100%;
+  text-align:center;
+  color:#fff;
+  cursor:pointer;
+}
+.btn:hover{
+  background:#2288bb;
+}
+
+.css_ol{position:absolute;top:40px;bottom:50px;left:0px;right:0px;z-index:4;
+overflow:scroll;overflow-x:hidden;overflow-y:auto;}
+
+.fullscreen{
+display:none;overflow:auto;z-index:99;position:absolute;top:0px;bottom:0px;left:0px;right:0px;background:white;
+}
+
+</style>
+
+<script language="javascript">
+//////////////////////////////////////////////
+var uname = "";
+var pword = "";
+var ct_sid = "";
+var ct_mid = ""; // 4位字符串
+var php_script = "";
+var server_rootdir = "";
+
+/***************** order show *********************/
+function settttt_caidan(p_obj)
+{
+  $("#ID_PAGE0").set_dian(p_obj);
+  show_status();
+}
+function show_putorder()
+{
+  var dians = $("#ID_PAGE0").get_dian();
+  if (dians.length != 0) {
+	$("#id_putorder").putorder(ct_mid,dians);
+	$("#id_putorder").set_close(settttt_caidan);
+  } else {
+    alert("您还没有选菜！");
+  }
+}
+/*******************topbar status show*************************/
+function show_status()
+{
+  var dians = $("#ID_PAGE0").get_dian();
+  var cnum = 0;
+  var psum = 0;
+  for (var i=0;i<dians.length;i++) {
+    cnum = add(cnum, dians[i].x);
+	var tnum = mul(dians[i].x, dians[i].p);
+	psum = add(psum, tnum);
+  }
+  var obj = document.getElementById("bottombar");
+  if (cnum == 0) {
+	obj.innerHTML = "您还没有点菜";
+  } else {
+	obj.innerHTML = "您点了<span style='color:red;'>"+cnum+"</span>个菜，一共"+"<span style='color:red;'>￥"+psum+"</span><div style='position:absolute;top:10px;bottom:10px;line-height:30px;right:10px;width:80px;text-align:center;color:white;border-radius:7px;background:red;cursor:pointer;' onclick='show_putorder();'>选好了</div>";
+  }
+}
+/*******************functions end*************************/
+function clear_caidan()
+{
+  $("#ID_PAGE0").clearcaidan();
+  show_status();
+}
+function usr_addhand()
+{
+  $.post(php_script, {'u':uname,'p':pword,'p0':"usr_addhand",'p1':ct_sid}, function(msg) {
+  });
+}
+function usr_delhand()
+{
+  $.post(php_script, {'u':uname,'p':pword,'p0':"usr_delhand",'p1':ct_sid}, function(msg) {
+  });
+}
+function open_home() {
+  window.location.href="index.html";
+}
+$(document).ready(function() {
+  uname = localStorage.getItem('tsh51_username');
+  pword = localStorage.getItem('tsh51_password');
+  var myURL = parseURL(window.location.href);
+  ct_sid = myURL.params.i;
+
+  php_script = get_server();
+  server_rootdir = get_rootdir();
+
+$.post(php_script, {'u':uname,'p':pword,'p0':'get_userinfo'}, function(msg) {
+  var ret = $.parseJSON(msg);
+  if (ret.s < 0) {
+    open_home();
+  }
+});
+
+  $.ajax({
+    type : "get", //jquey是不支持post方式跨域的
+    url : server_rootdir+"a/"+ct_sid+".json", //跨域请求的URL
+    dataType : "jsonp",
+    //传递给请求处理程序，用以获得jsonp回调函数名的参数名(默认为:callback)
+    jsonp: "jsoncallback",
+    //自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
+    jsonpCallback:"f",
+    //成功获取跨域服务器上的json数据后,会动态执行这个callback函数
+    success : function(data){
+      ct_mid = data.m;
+	  $("#ID_PAGE0").showcaidan(data.c, show_status);
+	  document.title += " - " + data.n;
+	  $('#ct_name').html(data.n);
+	  $('#ct_desc').html(data.d);
+	  $('#id_gun').html(data.t);
+    }
+  });
+
+  $.post(php_script, {'u':uname,'p':pword,'p0':"get_super",'p1':ct_sid}, function(msg) {
+    var ret = $.parseJSON(msg);
+	var str = "";
+    if ((ret.s & 1) == 1) {
+	  if ((ret.s & 2) == 2) {
+	    str += "<div>我已经是该餐厅的雇员</div><div onclick='usr_delhand();'>退出</div>";
+	  } else {
+	    str += "<div>老板请我加入，需要我同意</div><div onclick='usr_addhand();'>同意</div>";
+	  }
+	}
+    $('#id_hand').html(str);
+  });
+
+/*
+  $.ajax({
+    type: 'POST',
+    url: 'http://128.224.162.214:1234/ubus',
+    cache:false,
+    data: '{"jsonrpc":"2.0","id":1,"method":"call","params":["00000000000000000000000000000000","test","put_order",{"id":2,"caidan":"abc"}]}',
+    success:function(data) {  
+      alert(data.jsonrpc);
+    },  
+    error : function() {
+      alert("异常！");
+    }  
+  });
+*/
+  $('#top3').click(function(){
+    $('#id_popb').toggle();
+    return false;
+  });
+  $(document).click(function() {
+    $('#id_popb').hide();
+  });
+});
+
+</script>
+</head>
+
+<body>
+
+<div id="top1" onclick="open_home();"></div>
+<div id="top2"><marquee id="id_gun"></marquee></div>
+<div id="top3"></div>
+<div id="id_popb">
+<div style="height:30px;line-height:30px;cursor:pointer;"></div>
+<div style="height:30px;line-height:30px;cursor:pointer;" onclick="$('#id_showct').show();">餐厅信息</div>
+<div style="height:30px;line-height:30px;cursor:pointer;" onclick="clear_caidan();">清除菜单</div>
+</div>
+
+<div id="ID_PAGE0"></div>
+
+<div id="bottombar"></div>
+
+<div id="id_showorder" style="display:none;"></div>
+<div id="id_putorder" style="display:none;"></div>
+<div id="id_showolist" style="display:none;"></div>
+
+<div id="id_showct" class="fullscreen" onclick="$(this).hide();">
+<h2>餐馆信息</h2>
+<div id='ct_name' style='height:24px;margin:10px;text-align:center;'></div>
+<div id='ct_desc' style='height:100px;margin:10px;background:lightyellow;'></div>
+<div id="id_hand"></div>
+</div>
+
+</body>
+</html>

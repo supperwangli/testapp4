@@ -1,0 +1,428 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>管理餐厅</title>
+
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8"/>
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-cache, must-revalidate" />
+<meta http-equiv="expires" content="0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<script src="jquery.js"></script>
+<script src="jquery-ui.min.js"></script>
+<script src="login.js"></script>
+
+<link rel="stylesheet" type="text/css" media="screen" href="jquery.caidan.css" />
+<script src="jquery.caidan.js"></script>
+
+<link rel="stylesheet" type="text/css" media="screen" href="jquery.putorder.css" />
+<script src="jquery.putorder.js"></script>
+
+<link rel="stylesheet" type="text/css" media="screen" href="jquery.orderlist.css" />
+<script src="jquery.orderlist.js"></script>
+<script src="jquery.qrcode.min.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="jquery.order.css" />
+<script src="jquery.order.js"></script>
+
+<link rel="stylesheet" type="text/css" media="screen" href="jquery.handlist.css" />
+<script src="jquery.handlist.js"></script>
+
+<style type="text/css">
+
+body{
+//width:100%;
+//height:100%;
+margin:0; padding:0;
+//padding:0px;
+//overflow:auto;
+//text-align:center;
+//font: 62.5% "Trebuchet MS", sans-serif;
+}
+
+#top1{position:absolute;left:0px;width:50px;top:0px;height:40px;line-height:40px;background:lightgray;text-align:center;}
+#top2{position:absolute;left:50px;right:0px;top:0px;height:40px;line-height:40px;background:lightgray;text-align:center;}
+
+#bottombar{position:absolute;left:0px;width:100%;bottom:0px;height:50px;z-index:50;font-size:16px;background:gray;text-align:center;}
+
+//#id_ordertype{position:absolute;top:40px;bottom:50px;left:0px;width:100px;z-index:4;background:#ccc;overflow:hidden;}
+//#id_orderlist{position:absolute;top:40px;bottom:50px;left:100px;right:0px;z-index:4;background:#ccc;overflow:hidden;}
+
+
+.ID_P2T1{position:absolute;top:0px;height:40px;line-height:40px;left:50px;right:50px;background:lightgray;text-align:center;}
+.ID_P2T2{position:absolute;top:0px;height:40px;line-height:40px;right:0px;width:50px;background:lightgray;text-align:center;}
+.ID_P2C {position:absolute;top:40px;bottom:50px;left:0px;right:0px;z-index:4;background:white;}
+.ID_P2C h2 {margin:5px 5px 0px 5px;padding:5px;background:lightblue;font-size:20px;text-align:left;}
+.ID_P2C td {padding:5px 10px;}
+
+.c_typea {height:40px;line-height:40px;background:paleturquoise;border-width:0px 0px 1px 0px;border-style:solid;border-color:lightblue;cursor:pointer;text-align:center;font-size:10px;font-weight:bold;}
+.c_typeb {height:240px;line-height:40px;background:paleturquoise;border-width:0px 0px 1px 0px;border-style:solid;border-color:lightblue;font-size:10px;font-weight:bold;}
+
+</style>
+
+<script language="javascript">
+var uname = "";
+var pword = "";
+var h_menu1 = 25;
+var h_menu2 = 60;
+
+var pagex = 0;
+var s0 = true;
+var s1 = false;
+var s2 = true;
+var s3 = false;
+var fstr = "";
+
+//////////////////////////////////////////////
+var ct_sid = "";
+var ct_mid = "";
+var php_script = "";
+var server_rootdir = "";
+
+/***************** orderlist show *********************/
+function close_order()
+{
+  document.getElementById("id_showorder").style.display = "none";
+}
+function open_order(sid)
+{
+  $("#id_showorder").showorder(sid);
+//  $("#id_showorder").load("order_phone.php?id="+sid);
+  document.getElementById("id_showorder").style.display = "block";
+}
+/*******************topbar status show*************************/
+function show_status()
+{
+  var dians = $("#ID_PAGE1").get_dian();
+  var cnum = 0;
+  var psum = 0;
+  for (var i=0;i<dians.length;i++) {
+    cnum = add(cnum, dians[i].x);
+	var tnum = mul(dians[i].x, dians[i].p);
+	psum = add(psum, tnum);
+  }
+  var obj = document.getElementById("id_topbar_status");
+  if (cnum == 0) {
+	obj.innerHTML = "没有点菜";
+  } else {
+	obj.innerHTML = "选了"+cnum+"个菜,共"+psum+"块,点击下单";
+  }
+}
+/*******************functions end*************************/
+function putorder_ok() {
+  $("#ID_PAGE1").clearcaidan();
+  $("#id_orderlist").fresh_orderlist(1,pagex);
+}
+function putorder_fail() {
+}
+function show_putorder()
+{
+  var str = $("#ID_PAGE1").get_dian();
+  if (str != "") {
+	$("#id_putorder").putorder({xxx:str});
+	$("#id_putorder").set_putfunc(putorder_ok, putorder_fail);
+  }
+}
+function click_filter(tobj)
+{
+  var objs = tobj.parentNode.childNodes;
+  s0 = objs[0].childNodes[0].checked;
+  s1 = objs[1].childNodes[0].checked;
+  s2 = objs[2].childNodes[0].checked;
+  s3 = objs[3].childNodes[0].checked;
+  fstr = objs[4].childNodes[1].value;
+  $("#id_orderlist").filter_orderlist(s0,s1,s2,s3,fstr);
+}
+
+function orderlist_func()
+{
+  document.getElementById("id_order_num").innerHTML = $("#id_orderlist").getordernum();
+  $("#id_orderlist").filter_orderlist(s0,s1,s2,s3,fstr);
+}
+function show_ordertype(x)
+{
+  pagex = x;
+  var objs = document.getElementById("id_ordertype").childNodes;
+
+  for (var i=0;i<2;i++) {
+	if (i == x) {
+	  objs[i].style.background = "white";
+	} else {
+	  objs[i].style.background = "paleturquoise";
+	}
+  }
+  
+  objs = document.getElementById("id_ordertype").childNodes[2].childNodes;
+  objs[0].childNodes[0].checked = s0;
+  objs[1].childNodes[0].checked = s1;
+  objs[2].childNodes[0].checked = s2;
+  objs[3].childNodes[0].checked = s3;
+  objs[4].childNodes[1].value = fstr;
+  $("#id_orderlist").orderlist(1,x);
+}
+/**********/
+(function($) {
+  var tmp_sid;
+  $.fn.show_add = function() {
+    return this.each(function() {
+      str =
+        "<div onclick=$('#id_show_addhand').hide()>取消</div>"+
+        "<input type='text' />"+
+	    "<div onclick=$('#"+this.id+"').add_hand(this)>增加</div>"+
+        "<div>扫描</div>";
+      $('#id_show_addhand').html(str);
+      $('#id_show_addhand').show();
+	});
+  }
+  $.fn.show_del = function(thisobj) {
+    return this.each(function() {
+      var u = $(thisobj).prev().prev().html();
+      var str =
+        "<div>确定删除"+u+"吗？</div>"+
+        "<div onclick=$('#"+this.id+"').del_hand('"+u+"')>确定</div>"+
+        "<div onclick=$('#id_show_delhand').hide()>取消</div>";
+      $('#id_show_delhand').html(str);
+      $('#id_show_delhand').show();
+	});
+  }
+  var show_staff = function (thisobj) {
+    $.post(php_script, {'u':uname,'p':pword,'p0':"get_staff",'p1':tmp_sid}, function(msg) {
+      var ret = $.parseJSON(msg);
+      var str = "";
+      if (ret.s <= 0) {
+	    str = "没有雇员";
+      } else {
+	    str += "<div class='ID_P2T1'></div>"+
+	           "<div class='ID_P2T2' onclick=$('#"+thisobj.id+"').show_add()>增加</div>";
+	    str += "<div class='ID_P2C'>";
+	    var strs = ret.l.split(';');
+	    for (var i=0;i<strs.length;i++) {
+	      var strs1 = strs[i].split(':');
+	      str += "<div>";
+	      str += "<span>"+strs1[0]+"</span>";
+	      if (strs1[1] == "0") {
+		    str += "<span>雇员没有确定</span>";
+	      } else {
+		    str += "<span>雇员已经确定</span>";
+	      }
+	      str += "<span style='float:right;' onclick=$('#"+thisobj.id+"').show_del(this)>删除</span>";
+	      str += "</div>";
+	    }
+	    str += "</div>";
+      }
+      thisobj.innerHTML = str;
+    });
+  }
+  $.fn.fresh_staff = function () {
+    return this.each(function() {
+      show_staff(this);
+    });
+  }
+  $.fn.add_hand = function(obj) {
+    return this.each(function() {
+	  var handlist = $(obj).prev().val();
+      var thisobj = this;
+      $.post(php_script, {'u':uname,'p':pword,'p0':"add_hand", 'p1':tmp_sid, 'p2':handlist}, function(msg) {
+	    show_staff(thisobj);
+      });
+	  $('#id_show_addhand').hide();
+    });
+  }
+  $.fn.del_hand = function(u) {
+    return this.each(function() {
+      var thisobj = this;
+      $.post(php_script, {'u':uname,'p':pword,'p0':"del_hand",'p1':tmp_sid,'p2':u}, function(msg) {
+	    show_staff(thisobj);
+      });
+      $('#id_show_delhand').hide();
+    });
+  }
+  $.fn.extend({
+    init_staff: function(sid) {
+      return this.each(function() {
+        tmp_sid = sid;
+        show_staff(this);
+      });
+    }
+  });
+})(jQuery);
+/**********/
+function show_page(x)
+{
+  var objs = document.getElementById("bottombar").childNodes;
+
+  for (var i=0;i<3;i++) {
+	var obj = document.getElementById("ID_PAGE"+i);
+	if (x == i) {
+	  if (objs[i].style.fontWeight == "bold") {
+		switch (i) {
+		case 0:
+		  $("#id_orderlist").fresh_orderlist(1,pagex);
+		break;
+		case 1:
+		break;
+		case 2:
+		  $("#ID_PAGE2").init_staff(ct_sid);
+		break;
+		case 3:
+		break;
+		}
+	  } else {
+		switch (i) {
+		case 0:
+		  objs[0].childNodes[1].innerHTML = "订单(刷新)";
+		break;
+		case 1:
+		break;
+		case 2:
+		  $("#ID_PAGE2").init_staff(ct_sid);
+		break;
+		case 3:
+		break;
+		}
+		obj.style.display = "block";
+		objs[i].style.fontWeight = "bold";
+	  }
+	} else {
+	  switch (i) {
+	  case 0:
+		objs[0].childNodes[1].innerHTML = "订单";
+	  break;
+	  case 1:
+	  break;
+	  case 2:
+	  break;
+	  case 3:
+	  break;
+	  }
+	  obj.style.display = "none";
+	  objs[i].style.fontWeight = "normal";
+	}
+  }
+}
+var iut = 0;
+function kick_server()
+{
+//  alert(iut);
+  iut++;
+}
+function open_home() {
+  window.location.href="index.html";
+}
+$(document).ready(function() {
+  uname = localStorage.getItem('tsh51_username');
+  pword = localStorage.getItem('tsh51_password');
+  var myURL = parseURL(window.location.href);
+  ct_sid = myURL.params.i;
+  php_script = get_server();
+  server_rootdir = get_rootdir();
+
+$.post(php_script, {'u':uname,'p':pword,'p0':'get_userinfo'}, function(msg) {
+  var ret = $.parseJSON(msg);
+  if (ret.s < 0) {
+    open_home();
+  }
+  $('#id_topn').html(uname+"：");
+});
+
+  $.ajax({
+    type : "get", //jquey是不支持post方式跨域的
+    url : server_rootdir+"a/"+ct_sid+".json", //跨域请求的URL
+    dataType : "jsonp",
+    //传递给请求处理程序，用以获得jsonp回调函数名的参数名(默认为:callback)
+    jsonp: "jsoncallback",
+    //自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
+    jsonpCallback:"f",
+    //成功获取跨域服务器上的json数据后,会动态执行这个callback函数
+    success : function(data){
+      ct_mid = data.m;
+/*
+	  $("#ID_PAGE0").showcaidan(data.c, show_status);
+	  document.title += " - " + data.n;
+	  $('#ct_name').html(data.n);
+	  $('#ct_desc').html(data.d);
+	  $('#id_gun').html(data.t);
+*/
+      $('#id_topc').html(data.n);
+    }
+  });
+/*
+  $("#ID_PAGE1").showcaidan(data.c, show_status);
+
+  document.title += " - " + document.getElementById("ct_name").innerHTML;
+
+  $("#id_orderlist").set_freshfunc(orderlist_func);
+  $("#id_orderlist").orderlist(1,0);
+
+  show_page(0);
+  show_ordertype(0);
+
+  setInterval(kick_server, 5000);
+*/
+});
+
+</script>
+</head>
+
+<body>
+
+<div id="top1">
+<span onclick="open_home()" style="cursor:pointer;">返回</span>
+<hr style="height:20px;width:1px;backgroup:gray;float:right;" />
+</div>
+<div id="top2">
+<span id="id_topn">管理者：</span>
+<span id="id_topc">餐馆</span>
+</div>
+
+<div id="ID_PAGE1"><!-- echo $gct->caidan; --></div>
+<div id="ID_PAGE2" style="display:none;"></div>
+
+<div id="bottombar"
+><div style="height:50px;width:25%;float:left;" onclick="show_page(0)"
+><div id="id_order_num" style="height:30px;line-height:30px;width:100%;">X</div
+><div style="height:20px;line-height:20px;width:100%;">订单</div
+></div
+><div style="height:50px;width:25%;float:left;" onclick="show_page(1)"
+><div style="height:30px;line-height:30px;width:100%;"></div
+><div style="height:20px;line-height:20px;width:100%;">修改菜单</div
+></div
+><div style="height:50px;width:25%;float:left;" onclick="show_page(2)"
+><div style="height:30px;line-height:30px;width:100%;"></div
+><div style="height:20px;line-height:20px;width:100%;">管理雇员</div
+></div
+><div style="height:50px;width:25%;float:left;" onclick="show_page(3)"
+><div style="height:30px;line-height:30px;width:100%;"></div
+><div style="height:20px;line-height:20px;width:100%;">我</div
+></div
+></div>
+
+<div id="id_putorder" style="display:none;"></div>
+<div id="id_showorder" style="display:none;"></div>
+
+<div id="ID_PAGE0"
+><div id="id_ordertype" class="css_type"
+><div class="c_typea" onclick="show_ordertype(0)">我的订单</div
+><div class="c_typea" onclick="show_ordertype(1)">其他订单</div
+><div class="c_typeb"
+><div><input type="checkbox" checked=true />下单完成，等待确认</div
+><div><input type="checkbox" />确认完成，等待上菜(付款)</div
+><div><input type="checkbox" />上菜完成，需要买单</div
+><div><input type="checkbox" checked=true />买单完成</div
+><div><input type="checkbox" />客户离座</div
+><div>过滤:<input type="text" style="width:30px;" /></div
+><button onclick="click_filter(this)">搜索</button
+></div
+></div
+><div id="id_orderlist" class="css_menu"></div
+></div>
+
+<div id="id_show_addhand" style="position:absolute;top:0px;bottom:0px;left:0px;right:0px;background:white;z-index:50;display:none;"></div>
+<div id="id_show_delhand" style="position:absolute;top:0px;bottom:0px;left:0px;right:0px;background:white;z-index:50;display:none;"></div>
+
+</body>
+</html>

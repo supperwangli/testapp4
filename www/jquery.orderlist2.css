@@ -1,0 +1,36 @@
+
+.css_Gorder {}
+.css_Gorder hr {height:1px;border:none;border-top:1px solid #555555;}
+.css_Gorder div {padding:10px 10px;font-size:16px;}
+.css_Gorder table {}
+.css_Gorder table tr td {padding:0px 10px;}
+
+.css_Morder {}
+.css_Morder hr {height:1px;border:none;border-top:1px solid #555555;}
+.css_Morder div {padding:10px 10px;font-size:16px;}
+.css_Morder table {}
+.css_Morder table tr td {padding:0px 10px;}
+
+.css_ol2_top {
+position:absolute;
+top:0px;height:40px;left:0px;right:0px;
+z-index:50;
+background:lightgray;
+}
+#CSS_OL2TYPE {
+position:absolute;top:40px;bottom:50px;left:0px;width:100px;
+z-index:50;background:paleturquoise;
+}
+.css_typeline {height:40px;line-height:40px;border-width:0px 0px 1px 0px;border-style:solid;border-color:lightblue;cursor:pointer;text-align:center;font-size:10px;font-weight:bold;}
+#CSS_OL2LIST {
+position:absolute;top:40px;bottom:50px;left:100px;right:0px;
+z-index:50;background:white;margin:0px 0px 0px 10px;
+}
+.css_ol2_line {
+       padding: 0 10px;
+       height: 40px;
+       line-height: 40px;
+       border-bottom: 1px solid #ccc;
+       border-top: 1px solid #fff;
+       font-size: 14px;
+}

@@ -1,0 +1,82 @@
+
+.css_login {position:absolute;top:0px;left:0px;bottom:0px;right:0px;z-index:99;display:none;background:white;}
+.btn{
+  float:left;
+  background:#3399cc;
+  padding:10px 0px;
+  font-family:'Open Sans',sans-serif;
+  font-size:100%;
+  text-align:center;
+  color:#fff;
+  cursor:pointer;
+}
+.btn:hover{
+  background:#2288bb;
+}
+
+#ID_LOGIN {}
+#ID_LOGIN h1{background:#3399cc;padding:20px 0;font-size:140%;font-weight:300;text-align:center;color:#fff;}
+#ID_LOGIN label{font-weight:700;}
+#ID_LOGIN input{
+  width:90%;
+  background:#fff;
+  margin:10px 5px;
+  border:1px solid #ccc;
+  padding:10px 10px;
+  font-family:'Open Sans',sans-serif;
+  font-size:95%;
+  color:#555;
+}
+
+.btnl{
+  background:#3399cc;
+  font-family:'Open Sans',sans-serif;
+  font-size:100%;
+  text-align:center;
+  color:#fff;
+  cursor:pointer;
+}
+.btnl:hover{
+  background:#2288bb;
+}
+.txtl{
+  background:#3399cc;
+  font-family:'Open Sans',sans-serif;
+  font-size:100%;
+  text-align:center;
+  color:#fff;
+}
+#ID_REGISTER {display:none;}
+#ID_REGISTER label{font-weight:700;}
+#ID_REGISTER input {
+  background:#fff;
+//  width:100%;
+  margin:10px 5px;
+  border:1px solid #ccc;
+  padding:5px 5px;
+  font-family:'Open Sans',sans-serif;
+  font-size:95%;
+  color:#555;
+}
+
+.LGIt1 {
+position:absolute;top:0px;height:40px;line-height:40px;left:0px;width:50%;
+}
+.LGIt2 {
+position:absolute;top:0px;height:40px;line-height:40px;right:0px;width:50%;
+}
+.LGIbdy {
+position:absolute;top:40px;bottom:70px;left:0px;right:0px;
+}
+.LGItip {
+position:absolute;bottom:50px;height:20px;left:0px;right:0px;
+}
+.LGIb1 {
+position:absolute;bottom:0px;height:50px;line-height:50px;left:0px;width:50%;
+}
+.LGIb2 {
+position:absolute;bottom:0px;height:50px;line-height:50px;right:0px;width:50%;
+}
+.LGIb {
+position:absolute;bottom:0px;height:50px;line-height:50px;left:0px;right:0px;
+}

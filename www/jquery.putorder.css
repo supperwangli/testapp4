@@ -1,0 +1,38 @@
+
+.css_top0{position:absolute;top:0px;height:40px;left:0px;width:40px;z-index:50;background:url(close.png);cursor:pointer;}
+.css_top1{position:absolute;top:0px;height:40px;line-height:40px;left:40px;right:60px;text-align:center;z-index:50;background:gray;}
+.css_top2{position:absolute;top:0px;height:40px;line-height:40px;right:0px;width:60px;text-align:center;z-index:50;background:gray;}
+
+.css_qrcode{position:absolute;top:40px;height:165px;left:0px;right:0px;padding:10px 0px;z-index:50;background:white;}
+
+.css_po_l{position:absolute;top:205px;bottom:50px;left:0px;right:0px;padding:0px 10px;z-index:50;background:white;}
+
+.css_po_b0{position:absolute;bottom:0px;height:50px;line-height:50px;left:0px;width:60px;text-align:center;
+z-index:50;color:white;background:lightgray;cursor:pointer;}
+.css_po_b1{position:absolute;bottom:0px;height:50px;line-height:50px;left:60px;right:0px;text-align:center;z-index:50;color:white;background:lightgray;}
+
+.css_orderline {background:white;border-width:0px 0px 1px 0px;border-style:solid;border-color:lightblue;text-align:left;height:36px;line-height:36px;width:100%;}
+.btn_po{
+  float:left;
+  background:#3399cc;
+  padding:10px 0px;
+  font-family:'Open Sans',sans-serif;
+  font-size:100%;
+  text-align:center;
+  color:#fff;
+  cursor:pointer;
+  height:100%;
+}
+.btn_po:hover{
+  background:#2288bb;
+}
+
+.p_btn {width:34px;text-align:center;height:34px;line-height:34px;cursor:pointer;float:right;
+border-width:1px 1px 1px 1px;border-style:solid;border-color:lightgray;
+}
+.p_btn:hover {}
+.p_btn:active {}
+
+.p_txt {width:34px;text-align:center;height:34px;line-height:34px;font-size:15px;float:right;
+border-width:1px 0px 1px 0px;border-style:solid;border-color:lightgray;
+}

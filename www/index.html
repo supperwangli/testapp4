@@ -1,33 +1,429 @@
 
-<!DOCTYPE HTML>
-<html>
-  <head>
-    <meta name="viewport" content="width=320; user-scalable=no" />
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-    <title>scan qrcode</title>
-  
-    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
-    <script type="text/javascript" charset="utf-8">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>tsh51</title>
 
-  function btnbarcode() {
-    cordova.plugins.barcodeScanner.scan(
-      function (result) {
-        alert("We got a barcode\n" +
-              "Result: " + result.text + "\n" +
-              "Format: " + result.format + "\n" +
-              "Cancelled: " + result.cancelled);
-      }, 
-      function (error) {
-        alert("Scanning failed: " + error);
-      }
-											          );
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8"/>
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-cache, must-revalidate" />
+<meta http-equiv="expires" content="0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+<script src="jquery.js"></script>
+<script src="login.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="jquery.login.css" />
+<script src="jquery.login.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="jquery.order.css" />
+<script src="jquery.order.js"></script>
+
+<style type="text/css">
+*{margin:0;padding:0;border:0}
+body{
+width:100%;
+height:100%;
+margin:0px;
+padding:0px;
+overflow:auto;
+font: 62.5% "Trebuchet MS", sans-serif;
+}
+
+.pagewin {position:absolute;top:40px;bottom:50px;left:0px;right:0px;z-index:4;display:none;}
+
+#top1{position:absolute;left:0px;width:50px;top:0px;height:40px;line-height:40px;background:gray;text-align:center;}
+#top2{position:absolute;left:50px;right:0px;top:0px;height:40px;line-height:40px;padding:0px 10px;background:gray;}
+#bottombar{position:absolute;bottom:0px;height:50px;line-height:50px;left:0px;right:0px;padding:0px 10px;background:lightgray;}
+
+.ltitle {width:100%;height:20px;line-height:20px;background:lightgray;font-size:2px;text-align:left;padding:0px 0px 0px 5px}
+.oneline {width:100%;height:60px;background:white;border-width:0px 0px 1px 0px;border-style:solid;border-color:lightblue;text-align:left;}
+
+.popwin {
+position:absolute;top:0px;bottom:0px;left:0px;right:0px;
+font-size:16px;z-index:99;background:white;display:none;
+}
+
+</style>
+
+<script language="javascript">
+var php_script = "";
+var uname = "";
+var pword = "";
+
+function manage_ct(sid)
+{
+  window.location.href="mct.html?i="+sid;
+}
+function workon_ct(sid)
+{
+  window.location.href="ect.html?i="+sid;
+}
+function change_b(obj)
+{
+  objs = obj.parentNode.childNodes;
+  for (var i=0;i<objs.length;i++) {
+    if (objs[i] == obj) {
+	  objs[i].childNodes[0].style.background = "blue";
+	  objs[i].style.color = "blue";
+	} else {
+	  objs[i].childNodes[0].style.background = "";
+	  objs[i].style.color = "gray";
+	}
+  }
+}
+function show_tsh(obj)
+{
+  change_b(obj);
+  document.getElementById("id_show_wo").style.display = "none";
+  document.getElementById("id_tsh").style.display = "block";
+}
+function show_wo(obj)
+{
+  change_b(obj);
+  document.getElementById("id_tsh").style.display = "none";
+  document.getElementById("id_show_wo").style.display = "block";
+}
+
+function scan_tsh()
+{
+  var sid = "e2bc323659a00161";
+  var n = "2非常好的餐厅1";
+  $('#id_tsh').add_vshop(sid, n);
+}
+
+function noshow_userinfo()
+{
+  var str =
+  "<div onclick=$('#id_login').show_login(0)>登录</div>"+
+  "<div onclick=$('#id_login').show_login(1)>注册</div>";
+  $('#id_userinfo').html(str);
+}
+function show_userinfo()
+{
+$.post(php_script, {'p0':'get_userinfo','u':uname,'p':pword}, function(msg) {
+  var ret = $.parseJSON(msg);
+  if (ret.s == 0) {
+    var str =
+    "<h1>账户信息</h1>"+
+    "<p>"+
+    "<span>账号:</span>"+
+    "<span'>"+uname+"</span>"+
+    "</p>"+
+    "<p>"+
+    "<span>昵称:</span>"+
+    "<span>"+ret.n+"</span>"+
+    "</p>"+
+    "<p>"+
+    "<span>电子邮箱:</span>"+
+    "<span>"+ret.e+"</span>"+
+    "</p>"+
+    "<p>"+
+    "<span>手机号码:</span>"+
+    "<span>"+ret.p+"</span>"+
+    "</p>"+
+    "<div onclick=$('#id_login').logout()>注销</div>";
+    $('#id_userinfo').html(str);
+  } else {
+    noshow_userinfo();
+  }
+  
+});
+
+}
+function noshow_managerinfo()
+{
+  $('#id_manager').html("");
+}
+function show_managerinfo()
+{
+$.post(php_script, {'p0':'get_usershops','u':uname,'p':pword}, function(msg) {
+  var ret = $.parseJSON(msg);
+  if (ret.s > 0) {
+    var str = "<div>我开的餐馆：</div>";
+    for (var i=0;i<ret.s;i++) {
+		str += "<div onclick=manage_ct('"+ret.l[i].i+"')>"+ret.l[i].n+"</div>"
+    }
+    $('#id_manager').html(str);
+  } else {
+    noshow_managerinfo();
+  }
+});
+
+}
+function noshow_handinfo()
+{
+  $('#id_workon').html("");
+}
+function show_handinfo()
+{
+$.post(php_script, {'p0':'get_workcts','u':uname,'p':pword}, function(msg) {
+  var ret = $.parseJSON(msg);
+  if (ret.s > 0) {
+    var str = "<div>我工作的餐馆：</div>";
+    for (var i=0;i<ret.l.length;i++) {
+		str += "<div onclick=workon_ct('"+ret.l[i].i+"')>"+ret.l[i].n+"</div>"
+    }
+    $('#id_workon').html(str);
+  } else {
+    noshow_handinfo();
+  }
+});
+
+}
+
+/*
+从local和server取vshops数据，2种如何相互backup，整合显示？
+有server和没有server情况不一样，什么时候更新？
+把需要显示的内容，提供给总的显示，根据时间排列先后顺序。
+local可以保存，但是只显示访问(24)小时之内的，所有的都要发送到服务器上去。
+服务器只保留(1)个月的访问信息，如果没有访问删除。
+如何提供给外面显示？？？
+*/
+(function($) {
+  var vshops = [];
+  var orders = [];
+
+  var init_vshops = function() { // 只运行一次,剩下只读取vshops(访问过的餐馆),保存save_vshop()
+    var tmp = localStorage.getItem('vshops');
+    vshops = [];
+    try {
+      var ret = $.parseJSON(tmp);
+	  for (var i=0;i<ret.length;i++) { // 检查变量合法性
+        if (
+             (typeof(ret[i].i) == "undefined") || // 判断sid？？？
+             (typeof(ret[i].n) == "undefined") || // 判断name？？？
+             (typeof(ret[i].t) == "undefined")    // 判断time？？？
+           ) {
+          break;
+　　    }
+	  }
+	  if (i == ret.length) {
+	    for (var i=0;i<ret.length;i++) { // 检查重复的？？？
+		  for (var j=0;j<vshops.length;i++) {
+		    if (ret[i].i == vshops[j].i) { // 找到相同，修改
+			  if (ret[i].t > vshops[j].t) { // 改成时间大的
+			    vshops[j].t = ret[i].t;
+				vshops[j].n = ret[i].n;
+			  }
+			  break;
+			}
+		  }
+		  if (j == vshops.length) { // 没找到相同，添加
+		    vshops.push(ret[i]);
+		  }
+		}
+	  }
+	  save_vshops();
+    } catch (error) {
+      save_vshops();
+    }
+  };
+  var save_vshops = function() { // 存储访问过的餐馆,保存一个
+    var str = JSON.stringify(vshops);
+	localStorage.setItem('vshops', str);
+  };
+  var set_vshop_now = function(vshop) {
+	var t = new Date().Format("yyyy-MM-dd hh:mm:ss");
+	vshop.t = t;
+  }
+  $.fn.add_vshop = function(sid, n) {
+    return this.each(function() {
+	  var obj = {};
+	  for (var i=0;i<vshops.length;i++) {
+	    if ((vshops[i].i = sid) &&
+		    (vshops[i].n = n)) {
+			obj = vshops[i];
+		  break;
+		}
+	  }
+	  if (obj == {}) { // 没找到
+	    obj = {i:sid,n:n,t:""};
+		vshops.push(obj);
+	  }
+	  set_vshop_now(obj);
+	  save_vshops();
+      fresh_now(this);
+    });
+  }
+  $.fn.open_ct = function(i) {
+    return this.each(function() {
+      window.location.href="ct.html?i="+vshops[i].i;
+	  set_vshop_now(vshops[i]);
+      save_vshops();
+      fresh_now(this);
+    });
   }
 
-</script>       
+  var init_orders = function() { // 只运行一次，从local读取到内存
+    var tmp = localStorage.getItem('orders');
+    try {
+      var ret = $.parseJSON(tmp);
+	  for (var i=0;i<ret.length;i++) {
+        if (
+             isNaN(ret[i].i) || // 判断id？？？
+             (typeof(ret[i].e) == "undefined") || // 判断下单name？？？
+             (typeof(ret[i].t0) == "undefined") || // 判断下单time？？？
+             (typeof(ret[i].t1) == "undefined") || // 判断结账time？？？
+			 isNaN(ret[i].m) || // 判断订单状态？？？
+             isNaN(ret[i].s) || // 判断订单状态？？？
+             (typeof(ret[i].c) == "undefined")    // 判断菜单？？？
+           ) {
+          break;
+　　    }
+	  }
+	  if (i != ret.length) {
+        orders = [];
+        localStorage.setItem("orders",'[]');
+	  } else {
+	    orders = ret;
+	  }
+    } catch (error) {
+      orders = [];
+      localStorage.setItem('orders','[]');
+    }
+  };
+  var save_orders = function() { // 将orders都保存
+	var str = JSON.stringify(orders);
+	localStorage.setItem('orders', str);
+  }
+  var set_order_now = function(obj) { // 当打开一个餐馆，保存local，同时存储打开时间
+    var t = new Date().Format("yyyy-MM-dd hh:mm:ss");
+	obj.t = t;
+  }
+  var get_orders = function(tobj) {
+    $.post(php_script, {'p0':'get_Uorderlist','u':uname,'p':pword}, function(msg) {
+      var ret = $.parseJSON(msg);
+	  if (ret.s > 0) {
+	    var mod = 0;
+	    for (var i=0;i<ret.l.length;i++) { // 已网络数据为主，local只是覆盖网络数据的t
+		  var ofind = 0;
+		  for (var j=0;j<orders.length;j++) { // 找local
+		    if (ret.l[i].i == orders[j].i) { // 一个的server和local一样
+			  if ( (ret.l[i].s != orders[j].s) || // 状态变化就结账了
+			       (ret.l[i].m != orders[j].m) || // 订单类型变化
+		           (ret.l[i].c != orders[j].c) ) { // 一个订单的菜单变化了
+                ofind = 1; // 订单有修改，只更新t到当前时间
+		      }
+		      break;
+			}
+		  }
+		  if ((j == orders.length) || (ofind == 1)) { // 新数据或者有修改，更新t当前时间
+            set_order_now(ret.l[i]);
+		    mod = 1;
+		  }
+		}
+	    if (mod == 1) { // server和local不同,保存
+		  orders = ret.l;
+		  save_orders();
+		  fresh_now(tobj);
+		}
+	  }
+    });
+  }
+  $.fn.open_order = function(oid) {
+    return this.each(function() {
+      $("#css_showorder").showorder(orders[oid]);
+      set_order_now(orders[oid]);
+	  save_orders();
+      fresh_now(this);
+    });
+  }
 
-  </head>  
-  <body >  
-    <h2>scan qrcode</h2>  
-    <input type="button" id="btnbarcode" value="scan" onclick="btnbarcode()" />  
-  </body>  
-</html>  
+  var fresh_now = function(tobj) {
+    var str = ""; // 根据vshops.t和orders.t的时间大小排序，还没有实现
+    for (var i=0;i<vshops.length;i++) {
+      str += "<div class='oneline'>"+
+               "<div onclick=$('#"+tobj.id+"').open_ct('"+i+"')>"+vshops[i].n+"("+vshops[i].t+")</div>"+
+             "</div>";
+    }
+    for (var i=0;i<orders.length;i++) {
+      str += "<div class='oneline'>"+
+               "<div onclick=$('#"+tobj.id+"').open_order("+i+")>"+orders[i].t+"("+orders[i].c+")</div>"+
+             "</div>";
+    }
+    tobj.innerHTML = str;
+  }
+  $.fn.fresh_tsh = function () {
+	return this.each(function() {
+      get_orders(this);
+	});
+  }
+  $.fn.extend({
+    init_tsh: function() {
+      return this.each(function() {
+/*****/
+init_vshops();
+init_orders();
+fresh_now(this);
+/*****/
+      });
+    }
+  });
+})(jQuery);
+
+function run_login()
+{
+  show_userinfo();
+  show_managerinfo();
+  show_handinfo();
+}
+function run_logout()
+{
+  noshow_userinfo();
+  noshow_managerinfo();
+  noshow_handinfo();
+}
+
+function func_timer()
+{
+  $('#id_tsh').fresh_tsh();
+}
+
+$(document).ready(function() {
+  uname = localStorage.getItem('tsh51_username');
+  pword = localStorage.getItem('tsh51_password');
+  php_script = get_server();
+  show_userinfo();
+  show_managerinfo();
+  show_handinfo();
+  $('#id_tsh').init_tsh();
+  $('#id_tsh').fresh_tsh();
+  $('#id_login').init_login(php_script);
+  $('#id_login').set_login(run_login);
+  $('#id_login').set_logout(run_logout);
+
+  window.setInterval(func_timer, 3000);
+});
+
+</script>
+</head>
+
+<body>
+
+<div id='id_login' class="popwin"></div>
+<div id="css_showorder" class="popwin"></div>
+
+<div id="id_tsh" class="pagewin" style="display:block;"></div>
+<div id="id_show_wo" class="pagewin">
+  <div id="id_userinfo"></div>
+  <div id="id_manager"></div>
+  <div id="id_workon"></div>
+</div>
+
+<!-- 通讯录 -->
+<div id="top1">
+<span style="cursor:pointer;" onclick="scan_tsh();">扫描</span>
+<img src="vline.jpg" style="height:40px;width:1px;float:right;" />
+</div>
+<div id="top2"></div>
+<div id="bottombar"
+><div style='height:50px;width:50%;float:left;text-align:center;color:blue;' onclick='show_tsh(this);'
+><img src="bcon.png" style="background:blue;" /><div style='height:20px;line-height:20px;'>坦帅</div
+></div
+><div style='height:50px;width:50%;float:left;text-align:center;color:gray;' onclick='show_wo(this);'
+><img src="bcon.png" /><div style='height:20px;line-height:20px;'>我</div
+></div
+></div>
+
+</body>
+</html>

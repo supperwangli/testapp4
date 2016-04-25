@@ -1,0 +1,286 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>餐厅</title>
+
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8"/>
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="expires" content="0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+<script src="jquery.js"></script>
+<script src="login.js"></script>
+
+<link rel="stylesheet" type="text/css" media="screen" href="jquery.caidan.css" />
+<script src="jquery.caidan.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="jquery.putorder2.css" />
+<script src="jquery.putorder2.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="jquery.orderlist2.css" />
+<script src="jquery.orderlist2.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="jquery.order2.css" />
+<script src="jquery.order2.js"></script>
+
+<style type="text/css">
+body{}
+
+#top1{position:absolute;top:0px;height:40px;left:0px;width:40px;background:url(back.png);cursor:pointer;}
+#top2{position:absolute;top:0px;height:40px;line-height:40px;left:40px;right:40px;background:gray;text-align:center;}
+#top3{position:absolute;top:0px;height:40px;right:0px;width:40px;background:url(option.png);cursor:pointer;}
+#id_popb{position:absolute;top:40px;height:90px;right:0px;width:100px;text-align:center;z-index:50;background:gray;display:none;}
+
+#bottombar{position:absolute;bottom:0px;height:50px;line-height:50px;left:0px;right:0px;padding:0px 10px;background:lightgray;}
+
+#id_showorder {position:absolute;top:0px;left:0px;bottom:0px;right:0px;z-index:99;display:none;background:white;}
+#css_showorder{position:absolute;top:0px;left:0px;bottom:50px;right:0px;z-index:99;display:none;background:white;}
+#css_closeorder{position:absolute;left:0px;right:0px;bottom:0px;height:50px;z-index:99;display:none;background:gray;}
+
+#ID_PAGE2 {position:absolute;top:40px;left:0px;bottom:50px;right:0px;z-index:4;display:none;background:white;}
+#ID_PAGE2 h2 {margin:5px 5px 0px 5px;padding:5px;background:lightblue;font-size:20px;text-align:left;}
+#ID_PAGE2 td {padding:5px 10px;}
+
+.btn_ect{height:30px;line-height:30px;margin:10px 10px;text-align:center;color:white;border-radius:7px;background:gray;cursor:pointer;}
+
+</style>
+
+<script language="javascript">
+//////////////////////////////////////////////
+var uname = "";
+var pword = "";
+var ct_sid = "";
+var ct_mid = "";
+var php_script = "";
+var server_rootdir = "";
+var orders = [];
+
+var mo = 0; // 要修改的order的object，初始化为0
+
+/***************** order show *********************/
+function clear_function(tobj)
+{
+  if (tobj.innerHTML == "清除修改") {
+    tobj.style.background = "";
+    tobj.innerHTML = "清除菜单";
+  }
+  $('#ID_PAGE0').clearcaidan();
+  mo = 0; // 清除order修改菜单数据
+  show_status();
+}
+function settttt_caidan()
+{
+  var tobj = document.getElementById("id_cd_clear");
+  clear_function(tobj);
+  $('#id_showolist').fresh_orders_data();
+  $('#id_showolist').fresh_orders_show();
+}
+function show_putorder()
+{
+  if (mo != 0) {
+    if ((mo.cd.length !=0) && (mo.a == 0) && (mo.s == 0)) {
+      alert("您还没有修改菜单！");
+      return;
+    }
+  }
+
+  var str = $("#ID_PAGE0").get_dian();
+  if (str.length != 0) {
+	$("#id_putorder").putorder(ct_sid,"",str,mo);
+	$("#id_putorder").set_close(settttt_caidan);
+//	$("#id_putorder").set_putfunc(putorder_ok, putorder_fail);
+  } else {
+    alert("您还没有选菜！");
+  }
+}
+function modify_order(order_c) // 被order2调用，用order数据修改菜单
+{
+  document.getElementById("id_cd_clear").innerHTML = "清除修改";
+  click_bottom(1);
+  mo = order_c;
+  $('#ID_PAGE0').set_dian(mo.cd);
+  mo.a = 0; // 增加的菜数
+  mo.s = 0; // 减少的菜数
+  mo.ac = []; // 增加的caidan
+  mo.sc = []; // 减少的caidan
+  show_status();
+}
+/*******************topbar status show*************************/
+function show_status()
+{
+  var dians = $('#ID_PAGE0').get_dian();
+  var cnum = 0;
+  var psum = 0;
+  for (var i=0;i<dians.length;i++) {
+    cnum = add(cnum, dians[i].x);
+    var tnum = mul(dians[i].p, dians[i].x);
+    psum = add(psum, tnum);
+  }
+  var str = "";
+  if (cnum == 0) {
+	str += "还没有点菜";
+  } else {
+	str += "点了<span style='color:white;'>"+cnum+"</span>个菜,共"+"<span style='color:white;'>￥"+psum+"</span>";
+  }
+  if (mo != 0) {
+    mo.a = 0; // 增加的菜数
+    mo.s = 0; // 减少的菜数
+    mo.ac = []; // 增加的caidan
+    mo.sc = []; // 减少的caidan
+    for (var i=0;i<mo.cd.length;i++) {
+      for (var j=0;j<dians.length;j++) {
+        if (mo.cd[i].i == dians[j].i) { // 点的菜在order里面的处理
+          if (mo.cd[i].x == dians[j].x) {  // 相等没有变化，不做处理
+		    break;
+		  }
+		  if (mo.cd[i].x > dians[j].x) {
+			var tss = sub(mo.cd[i].x, dians[j].x);
+		    mo.s = add(mo.s, tss);
+		    mo.sc.push(mo.cd[i]);
+		    mo.sc[mo.sc.length - 1].x = tss;
+		  } else {
+			var taa = sub(dians[j].x, mo.cd[i].x);
+            mo.a += add(mo.a, taa);
+		    mo.ac.push(dians[j]);
+		    mo.ac[mo.ac.length - 1].x = taa;
+		  }
+		  break;
+        }
+	  }
+      if (j == dians.length) { // order的菜不在点的菜里面，是减少的菜
+	    var tss = mo.cd[i].x;
+        mo.s = add(mo.s, tss);
+		mo.sc.push(mo.cd[i]);
+		mo.sc[mo.sc.length - 1].x = tss;
+      }
+    }
+    for (var i=0;i<dians.length;i++) {
+      for (var j=0;j<mo.cd.length;j++) {
+        if (dians[i].i == mo.cd[j].i) {
+		  break;
+        }
+      }
+      if (j == mo.cd.length) { // 点的菜不在order里面，是增加的菜
+	    var taa = dians[i].x;
+        mo.a = add(mo.a, taa);
+		mo.ac.push(dians[i]);
+		mo.ac[mo.ac.length - 1].x = taa;
+	  }
+    }
+    str += "(修改:加"+mo.a+"个菜,减"+mo.s+"个菜)";
+  }
+  document.getElementById("top2").innerHTML = str;
+}
+/*******************functions end*************************/
+function open_home() {
+  window.location.href="index.html";
+}
+function func_timer()
+{
+  $('#id_showolist').fresh_orders_data();
+}
+function click_bottom(nb)
+{
+  var objs = document.getElementById("bottombar").childNodes;
+  for (var i=0;i<objs.length;i++) {
+    var obj = objs[i].childNodes[0];
+    if (i == nb) {
+	  obj.style.background = 'red';
+	  switch (i) {
+	  case 0:
+	    $('#id_showolist').fresh_orders_show(); // 更新
+	    $('#id_showolist').show();
+	  break;
+	  case 1:
+	    $('#ID_PAGE0').show(); // 显示
+	  break;
+	  }
+	} else {
+	  obj.style.background = 'gray';
+	  switch (i) {
+	  case 0:
+	    $('#id_showolist').hide();
+	  break;
+	  case 1:
+	    $('#ID_PAGE0').hide();
+	  break;
+	  }
+	}
+  }
+}
+$(document).ready(function() {
+  uname = localStorage.getItem('tsh51_username');
+  pword = localStorage.getItem('tsh51_password');
+  var myURL = parseURL(window.location.href);
+  ct_sid = myURL.params.i;
+  php_script = get_server();
+  server_rootdir = get_rootdir();
+  mo = 0;
+
+$.post(php_script, {'p0':'get_userinfo','u':uname,'p':pword}, function(msg) {
+  var ret = $.parseJSON(msg);
+  if (ret.s < 0) {
+    open_home();
+  } else {
+    $('#id_showolist').init_orders(ct_sid);
+    window.setInterval(func_timer, 3000);
+  }
+});
+
+  $.ajax({
+    type : "get", //jquey是不支持post方式跨域的
+    url : server_rootdir+"a/"+ct_sid+".json", //跨域请求的URL
+    dataType : "jsonp",
+    //传递给请求处理程序，用以获得jsonp回调函数名的参数名(默认为:callback)
+    jsonp: "jsoncallback",
+    //自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
+    jsonpCallback:"f",
+    //成功获取跨域服务器上的json数据后,会动态执行这个callback函数
+    success : function(data){
+      ct_mid = data.m;
+	  $("#ID_PAGE0").showcaidan(data.c, show_status);
+	  document.title += " - " + data.n;
+    }
+  });
+
+  $('#top3').click(function(){
+    $('#id_popb').toggle();
+    return false;
+  });
+  $(document).click(function() {
+    $('#id_popb').hide();
+  });
+});
+
+</script>
+</head>
+
+<body>
+
+<div id="top1" onclick="open_home();"></div>
+<div id="top2">餐厅名</div>
+<div id="top3"></div>
+<div id="id_popb">
+<div style="height:30px;line-height:30px;cursor:pointer;" onclick='show_putorder();'>提交</div>
+<div style="height:30px;line-height:30px;cursor:pointer;">扫描</div>
+<div style="height:30px;line-height:30px;cursor:pointer;" id="id_cd_clear" onclick="clear_function(this);">清除菜单</div>
+</div>
+
+<div id="ID_PAGE0"></div>
+
+<div id="bottombar"
+><div style="height:50px;width:50%;float:left;"
+><div class="btn_ect" onclick="click_bottom(0);">订单</div
+></div
+><div style="height:50px;width:50%;float:left;"
+><div class="btn_ect" style="background:red;" onclick="click_bottom(1);">菜单</div
+></div
+></div>
+
+<div id="id_putorder" style="display:none;"></div>
+
+<div id="id_showorder" style="display:none;"></div>
+<div id="id_showolist" style="display:none;"></div>
+
+</body>
+</html>

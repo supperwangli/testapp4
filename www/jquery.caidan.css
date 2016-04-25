@@ -1,0 +1,29 @@
+
+.css_type{position:absolute;top:40px;bottom:50px;left:0px;width:100px;z-index:4;
+background:paleturquoise;
+overflow:scroll;overflow-x:hidden;overflow-y:auto;}
+
+.css_menu{position:absolute;top:40px;bottom:50px;left:100px;right:0px;z-index:4;
+border-width:0px 0px 0px 10px;border-style:solid;border-color:white;
+overflow:auto;/*overflow-x:hidden;overflow-y:auto;*/
+}
+
+.c1_add {width:34px;text-align:center;height:34px;line-height:34px;cursor:pointer;float:right;
+border-width:1px 1px 1px 1px;border-style:solid;border-color:lightgray;
+}
+.c1_add:hover {}
+.c1_add:active {}
+
+.c1_txt {width:34px;text-align:center;height:34px;line-height:34px;font-size:15px;float:right;
+border-width:1px 0px 1px 0px;border-style:solid;border-color:lightgray;visibility:hidden;
+}
+
+.c1_del {width:34px;text-align:center;height:34px;line-height:34px;cursor:pointer;float:right;
+border-width:1px 1px 1px 1px;border-style:solid;border-color:lightgray;visibility:hidden;
+}
+.c1_del:hover {}
+.c1_del:active {}
+
+.c_typel {height:40px;line-height:40px;background:paleturquoise;border-width:0px 0px 1px 0px;border-style:solid;border-color:lightblue;cursor:pointer;text-align:center;font-size:10px;font-weight:bold;}
+.c_typet {background:paleturquoise;border-width:0px 0px 1px 2px;border-style:solid;border-color:lightblue;padding-left:10px;text-align:left;font-size:10px;font-weight:bold;height:25px;line-height:25px;}
+.c_caidan {background:white;border-width:0px 0px 1px 0px;border-style:solid;border-color:lightblue;text-align:left;}
