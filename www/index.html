@@ -82,12 +82,14 @@ function show_wo(obj)
   change_b(obj);
   document.getElementById("id_tsh").style.display = "none";
   document.getElementById("id_show_wo").style.display = "block";
+/*
   support = $.support;
   var str = "";
   for (key in support) {  
     str += 'support.' + key + ' = ' + support[key] + '<br />';  
   }
   document.getElementById("id_show_wo").innerHTML = str;
+*/
 }
 
 function scan_tsh()
@@ -298,6 +300,7 @@ local可以保存，但是只显示访问(24)小时之内的，所有的都要�
   }
   var get_orders = function(tobj) {
     $.post(php_script, {'p0':'get_Uorderlist','u':uname,'p':pword}, function(msg) {
+alert(msg);
       var ret = $.parseJSON(msg);
 	  if (ret.s > 0) {
 	    var mod = 0;
