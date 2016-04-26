@@ -121,8 +121,6 @@ function usr_delhand()
   });
 }
 $(document).ready(function() {
-  $.support.cors = true;
-
   uname = localStorage.getItem('tsh51_username');
   pword = localStorage.getItem('tsh51_password');
   var myURL = parseURL(window.location.href);
@@ -191,6 +189,12 @@ $.post(php_script, {'u':uname,'p':pword,'p0':'get_userinfo'}, function(msg) {
   $(document).click(function() {
     $('#id_popb').hide();
   });
+});
+
+$(document).on("mobileinit", function() {
+   //support cross-domain requests
+   $.support.cors = true;
+   $.mobile.allowCrossDomainPages = true;
 });
 
 </script>

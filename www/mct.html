@@ -308,8 +308,6 @@ function kick_server()
   iut++;
 }
 $(document).ready(function() {
-  $.support.cors = true;
-
   uname = localStorage.getItem('tsh51_username');
   pword = localStorage.getItem('tsh51_password');
   var myURL = parseURL(window.location.href);
@@ -359,6 +357,12 @@ $.post(php_script, {'u':uname,'p':pword,'p0':'get_userinfo'}, function(msg) {
 
   setInterval(kick_server, 5000);
 */
+});
+
+$(document).on("mobileinit", function() {
+   //support cross-domain requests
+   $.support.cors = true;
+   $.mobile.allowCrossDomainPages = true;
 });
 
 </script>
