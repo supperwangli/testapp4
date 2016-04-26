@@ -299,6 +299,7 @@ local可以保存，但是只显示访问(24)小时之内的，所有的都要�
 	obj.t = t;
   }
   var get_orders = function(tobj) {
+alert(php_script);
     $.post(php_script, {'p0':'get_Uorderlist','u':uname,'p':pword}, function(msg) {
 alert(msg);
       var ret = $.parseJSON(msg);
