@@ -11,7 +11,8 @@
 <meta http-equiv="expires" content="0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-<script src="jquery.js"></script>
+<script src="jquery-1.12.3.min.js"></script>
+<script src="jquery.mobile-1.4.5.min.js"></script>
 
 <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 
@@ -99,7 +100,7 @@ function scan_tsh()
         var myURL = parseURL(result.text);
         var n_sid = myURL.params.i;
         alert(n_sid);
-        window.open(result.text);
+        window.open("ct.html?i="+n_sid);
       }, 
       function (error) {
         alert("Scanning failed: " + error);
@@ -401,7 +402,7 @@ function func_timer()
 }
 
 $(document).ready(function() {
-  $.support.cors = true;
+//  $.support.cors = true;
 
   uname = localStorage.getItem('tsh51_username');
   pword = localStorage.getItem('tsh51_password');
@@ -416,6 +417,12 @@ $(document).ready(function() {
   $('#id_login').set_logout(run_logout);
 
   window.setInterval(func_timer, 3000);
+});
+
+$(document).on("mobileinit", function() {
+   //support cross-domain requests
+   $.support.cors = true;
+   $.mobile.allowCrossDomainPages = true;
 });
 
 </script>
