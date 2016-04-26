@@ -60,6 +60,10 @@ overflow:scroll;overflow-x:hidden;overflow-y:auto;}
 display:none;overflow:auto;z-index:99;position:absolute;top:0px;bottom:0px;left:0px;right:0px;background:white;
 }
 
+.ui-loader-default{display:none}
+.ui-mobile-viewport{border:none;}
+.ui-page{padding:0;margin:0;outline:0}
+
 </style>
 
 <script language="javascript">
@@ -196,7 +200,6 @@ $(document).on("mobileinit", function() {
    //support cross-domain requests
    $.support.cors = true;
    $.mobile.allowCrossDomainPages = true;
-   $.mobile.hidePageLoadingMsg();
 });
 
 </script>

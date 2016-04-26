@@ -60,6 +60,10 @@ margin:0; padding:0;
 .c_typea {height:40px;line-height:40px;background:paleturquoise;border-width:0px 0px 1px 0px;border-style:solid;border-color:lightblue;cursor:pointer;text-align:center;font-size:10px;font-weight:bold;}
 .c_typeb {height:240px;line-height:40px;background:paleturquoise;border-width:0px 0px 1px 0px;border-style:solid;border-color:lightblue;font-size:10px;font-weight:bold;}
 
+.ui-loader-default{display:none}
+.ui-mobile-viewport{border:none;}
+.ui-page{padding:0;margin:0;outline:0}
+
 </style>
 
 <script language="javascript">
@@ -364,7 +368,6 @@ $(document).on("mobileinit", function() {
    //support cross-domain requests
    $.support.cors = true;
    $.mobile.allowCrossDomainPages = true;
-   $.mobile.hidePageLoadingMsg();
 });
 
 </script>
