@@ -82,6 +82,12 @@ function show_wo(obj)
   change_b(obj);
   document.getElementById("id_tsh").style.display = "none";
   document.getElementById("id_show_wo").style.display = "block";
+  support = $.support;
+  var str = "";
+  for (key in support) {  
+    str += 'support.' + key + ' = ' + support[key] + '<br />';  
+  }
+  document.getElementById("id_show_wo").innerHTML = str;
 }
 
 function scan_tsh()
