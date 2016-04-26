@@ -70,7 +70,7 @@ function parseURL(url) {
 
 function get_server()
 {
-//  var host = window.location.hostname;
+  //var host = window.location.hostname;
   var host = "www.tsh51.com";
   return "http://" + host + "/login.php";
 }
@@ -124,4 +124,9 @@ function isExitsVariable(variableName) {
         }
     } catch(e) {}
     return false;
+}
+
+/* 回到index.html,实际就是关闭本窗口 */
+function open_home() {
+  window.close();
 }

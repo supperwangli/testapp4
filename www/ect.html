@@ -12,8 +12,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 <script src="jquery.js"></script>
-<script src="login.js"></script>
 
+<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+
+<script src="login.js"></script>
 <link rel="stylesheet" type="text/css" media="screen" href="jquery.caidan.css" />
 <script src="jquery.caidan.js"></script>
 <link rel="stylesheet" type="text/css" media="screen" href="jquery.putorder2.css" />
@@ -172,9 +174,6 @@ function show_status()
   document.getElementById("top2").innerHTML = str;
 }
 /*******************functions end*************************/
-function open_home() {
-  window.location.href="index.html";
-}
 function func_timer()
 {
   $('#id_showolist').fresh_orders_data();
@@ -209,6 +208,8 @@ function click_bottom(nb)
   }
 }
 $(document).ready(function() {
+  $.support.cors = true;
+
   uname = localStorage.getItem('tsh51_username');
   pword = localStorage.getItem('tsh51_password');
   var myURL = parseURL(window.location.href);

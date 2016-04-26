@@ -15,20 +15,17 @@
 
 <script src="jquery.js"></script>
 <script src="jquery-ui.min.js"></script>
-<script src="login.js"></script>
 
+<script src="login.js"></script>
 <link rel="stylesheet" type="text/css" media="screen" href="jquery.caidan.css" />
 <script src="jquery.caidan.js"></script>
-
 <link rel="stylesheet" type="text/css" media="screen" href="jquery.putorder.css" />
 <script src="jquery.putorder.js"></script>
-
 <link rel="stylesheet" type="text/css" media="screen" href="jquery.orderlist.css" />
 <script src="jquery.orderlist.js"></script>
 <script src="jquery.qrcode.min.js"></script>
 <link rel="stylesheet" type="text/css" media="screen" href="jquery.order.css" />
 <script src="jquery.order.js"></script>
-
 <link rel="stylesheet" type="text/css" media="screen" href="jquery.handlist.css" />
 <script src="jquery.handlist.js"></script>
 
@@ -310,10 +307,9 @@ function kick_server()
 //  alert(iut);
   iut++;
 }
-function open_home() {
-  window.location.href="index.html";
-}
 $(document).ready(function() {
+  $.support.cors = true;
+
   uname = localStorage.getItem('tsh51_username');
   pword = localStorage.getItem('tsh51_password');
   var myURL = parseURL(window.location.href);

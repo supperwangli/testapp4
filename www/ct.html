@@ -13,8 +13,8 @@
 
 <script src="jquery.js"></script>
 <script src="jquery.qrcode.min.js"></script>
-<script src="login.js"></script>
 
+<script src="login.js"></script>
 <link rel="stylesheet" type="text/css" media="screen" href="jquery.caidan.css" />
 <script src="jquery.caidan.js"></script>
 <link rel="stylesheet" type="text/css" media="screen" href="jquery.putorder.css" />
@@ -120,10 +120,9 @@ function usr_delhand()
   $.post(php_script, {'u':uname,'p':pword,'p0':"usr_delhand",'p1':ct_sid}, function(msg) {
   });
 }
-function open_home() {
-  window.location.href="index.html";
-}
 $(document).ready(function() {
+  $.support.cors = true;
+
   uname = localStorage.getItem('tsh51_username');
   pword = localStorage.getItem('tsh51_password');
   var myURL = parseURL(window.location.href);
