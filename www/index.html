@@ -12,6 +12,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 <script src="jquery.js"></script>
+<script src="jquery.mobile-1.4.5.min.js"></script>
 <script src="login.js"></script>
 <link rel="stylesheet" type="text/css" media="screen" href="jquery.login.css" />
 <script src="jquery.login.js"></script>
@@ -390,8 +391,6 @@ function func_timer()
 }
 
 $(document).ready(function() {
-$.support.cors = true;
-
   uname = localStorage.getItem('tsh51_username');
   pword = localStorage.getItem('tsh51_password');
   php_script = get_server();
@@ -406,6 +405,11 @@ $.support.cors = true;
 
   window.setInterval(func_timer, 3000);
 });
+
+$( document ).bind( "mobileinit", function() { 
+   $.support.cors = true;    
+   $.mobile.allowCrossDomainPages = true; 
+}); 
 
 </script>
 </head>
